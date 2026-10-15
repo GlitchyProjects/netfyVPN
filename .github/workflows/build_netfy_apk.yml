@@ -25,22 +25,19 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
-
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
           cache: true
 
-      - name: Install Dependencies
+      - name: Accept Android Licenses
         run: |
-          flutter pub get
+          yes | flutter doctor --android-licenses || true
 
-      - name: Generate Code & Translations
+      - name: Prepare Native Core & Dependencies
         run: |
-          dart run slang || echo "slang completed"
+          make android-prepare
 
       - name: Build Android APKs (Split per ABI & Universal)
         run: |
