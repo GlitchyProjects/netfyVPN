@@ -94,7 +94,7 @@ class RoutingConfigNotifier extends _$RoutingConfigNotifier {
       },
       routes: <RouteBase>[
         StatefulShellRoute.indexedStack(
-          builder: (_, _, navigationShell) => MyAdaptiveLayout(
+          builder: (context, state, navigationShell) => MyAdaptiveLayout(
             navigationShell: navigationShell,
             isMobileBreakpoint: isMobileBreakpoint,
             showProfilesAction: showProfilesAction,
@@ -105,7 +105,7 @@ class RoutingConfigNotifier extends _$RoutingConfigNotifier {
                 GoRoute(
                   name: 'home',
                   path: '/home',
-                  builder: (_, _) => FocusScope(node: branchesScope['home'], child: const HomePage()),
+                  builder: (context, state) => FocusScope(node: branchesScope['home'], child: const HomePage()),
                   routes: <GoRoute>[
                     GoRoute(
                       name: 'proxies',
@@ -133,7 +133,7 @@ class RoutingConfigNotifier extends _$RoutingConfigNotifier {
                   GoRoute(
                     name: 'profiles',
                     path: '/profiles',
-                    builder: (_, _) => FocusScope(node: branchesScope['profiles'], child: const ProfilesPage()),
+                    builder: (context, state) => FocusScope(node: branchesScope['profiles'], child: const ProfilesPage()),
                     routes: <GoRoute>[
                       GoRoute(
                         name: 'profileDetails',
@@ -157,7 +157,7 @@ class RoutingConfigNotifier extends _$RoutingConfigNotifier {
                     node: branchesScope['settings'],
                     child: PopScope(
                       canPop: false,
-                      onPopInvokedWithResult: (_, _) => context.goNamed('home'),
+                      onPopInvokedWithResult: (didPop, result) => context.goNamed('home'),
                       child: SettingsPage(),
                     ),
                   ),
@@ -230,7 +230,7 @@ class RoutingConfigNotifier extends _$RoutingConfigNotifier {
                   GoRoute(
                     name: 'logs',
                     path: '/logs',
-                    builder: (_, _) => FocusScope(node: branchesScope['logs'], child: const LogsPage()),
+                    builder: (context, state) => FocusScope(node: branchesScope['logs'], child: const LogsPage()),
                   ),
                 ],
               ),
@@ -239,14 +239,14 @@ class RoutingConfigNotifier extends _$RoutingConfigNotifier {
                   GoRoute(
                     name: 'about',
                     path: '/about',
-                    builder: (_, _) => FocusScope(node: branchesScope['about'], child: const AboutPage()),
+                    builder: (context, state) => FocusScope(node: branchesScope['about'], child: const AboutPage()),
                   ),
                 ],
               ),
             ],
           ],
         ),
-        GoRoute(name: 'intro', path: '/intro', builder: (_, _) => const IntroPage()),
+        GoRoute(name: 'intro', path: '/intro', builder: (context, state) => const IntroPage()),
       ],
     );
   }

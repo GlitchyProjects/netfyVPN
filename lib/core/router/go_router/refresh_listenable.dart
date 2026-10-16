@@ -14,7 +14,7 @@ class RefreshListenable extends ChangeNotifier {
         notifyListeners();
       }
     });
-    ref.listen(Preferences.introCompleted, (_, _) => notifyListeners());
+    ref.listen(Preferences.introCompleted, (_, __) => notifyListeners());
   }
   final Ref ref;
 }
