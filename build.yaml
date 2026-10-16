@@ -1,9 +1,5 @@
 targets:
   $default:
-    sources:
-      - "lib/**"
-      - "assets/**"
-      - "pubspec.yaml"
     builders:
       json_serializable:
         options:
