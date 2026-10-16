@@ -88,7 +88,7 @@
   "intro": {
     "banner": "هرآنچه برای اینترنت بدون محدودیت نیاز دارید",
     "termsAndPolicyCaution(rich)": "با ادامه، شما با ${tap(@:pages.about.termsAndConditions)} موافقت می‌کنید",
-    "info(rich)": "کلاینت اختصاصی و پرسرعت netfyVPN"
+    "info(rich)": "کلاینت اختصاصی netfyVPN - ${tap_source(امن)} (${tap_license(پرسرعت)})"
   },
   "pages": {
     "home": {

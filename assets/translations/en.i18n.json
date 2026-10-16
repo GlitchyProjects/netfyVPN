@@ -88,7 +88,7 @@
   "intro": {
     "banner": "All you need for an unrestricted internet",
     "termsAndPolicyCaution(rich)": "By continuing you agree to ${tap(@:pages.about.termsAndConditions)}",
-    "info(rich)": "netfyVPN - Secure & Fast Proxy Client"
+    "info(rich)": "netfyVPN - ${tap_source(Secure)} (${tap_license(Fast)})"
   },
   "pages": {
     "home": {
