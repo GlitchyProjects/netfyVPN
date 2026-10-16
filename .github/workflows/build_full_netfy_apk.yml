@@ -1,0 +1,81 @@
+name: Build Full netfyVPN APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  build-apk:
+    name: Build Custom netfyVPN APK
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Setup Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Setup Flutter 3.24.3
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.3'
+          channel: 'stable'
+          cache: true
+
+      - name: Download Prebuilt Core Libs
+        run: |
+          mkdir -p android/app/libs
+          curl -L https://github.com/hiddify/hiddify-next-core/releases/download/v4.1.0/hiddify-lib-android.tar.gz | tar xz -C android/app/libs/
+          ls -la android/app/libs/
+
+      - name: Setup Signing Keystore
+        run: |
+          keytool -genkeypair -v -keystore android/app/netfy.jks -alias netfy -keyalg RSA -keysize 2048 -validity 10000 -storepass netfyvpn123 -keypass netfyvpn123 -dname "CN=netfyVPN, OU=Netfy, O=Netfy, L=Tehran, ST=Tehran, C=IR"
+          cat <<EOF > android/key.properties
+          storePassword=netfyvpn123
+          keyPassword=netfyvpn123
+          keyAlias=netfy
+          storeFile=netfy.jks
+          EOF
+
+      - name: Install Dependencies
+        run: |
+          flutter pub get
+
+      - name: Generate Code & Translations
+        run: |
+          dart run slang
+          dart run build_runner build --delete-conflicting-outputs
+
+      - name: Build APK (Release)
+        run: |
+          flutter build apk --release --target=lib/main_prod.dart
+          ls -lh build/app/outputs/flutter-apk/
+
+      - name: Prepare Release Artifacts
+        run: |
+          cp build/app/outputs/flutter-apk/app-release.apk netfyVPN.apk
+          ls -lh netfyVPN.apk
+
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: netfyVPN-Android-Full-Custom
+          path: netfyVPN.apk
+          retention-days: 14
+
+      - name: Create GitHub Release v2.0.0
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v2.0.0
+          name: "netfyVPN Android Full Release v2.0.0"
+          body: "Official Fully Compiled Release of netfyVPN with custom Dark Obsidian palette, 3D ribbon connect button, and Netfy identity."
+          files: netfyVPN.apk
