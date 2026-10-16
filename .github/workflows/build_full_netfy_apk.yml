@@ -52,9 +52,9 @@ jobs:
 
       - name: Generate Code & Translations
         run: |
-          dart run slang
-          dart run build_runner clean || true
           dart run build_runner build --delete-conflicting-outputs
+          dart run slang
+          ls -la lib/gen/
 
       - name: Build APK (Release)
         run: |
