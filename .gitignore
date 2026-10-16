@@ -68,3 +68,15 @@ app.*.map.json
 # Windows Self-Signed for msix
 windows/sign.pfx
 windows/sign.cer
+
+# Scratch tools and builds
+*.apk
+*.idsig
+*.zip
+patch_apk.ps1
+download_apk.ps1
+uber-apk-signer.jar
+/res/
+/assets/flutter_assets/
+/AndroidManifest.xml
+/lib/arm64-v8a/
