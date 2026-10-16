@@ -74,3 +74,11 @@ jobs:
           name: netfyVPN-Android-Universal-APK
           path: netfyVPN.apk
           retention-days: 14
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v1.0.0
+          name: "netfyVPN Android Client v1.0.0"
+          body: "Official Release of netfyVPN Android Client"
+          files: netfyVPN.apk
