@@ -72,7 +72,7 @@ android {
 
     defaultConfig {
         applicationId "com.netfy.vpn"
-        minSdkVersion flutter.minSdkVersion
+        minSdkVersion 23
         targetSdkVersion 36
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
