@@ -25,10 +25,10 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: Install Apktool & Zipalign
+      - name: Install Apktool & Tools
         run: |
           sudo apt-get update
-          sudo apt-get install -y zipalign
+          sudo apt-get install -y zipalign apksigner
           sudo curl -L https://raw.githubusercontent.com/iBotPeaches/Apktool/master/scripts/linux/apktool -o /usr/local/bin/apktool
           sudo chmod +x /usr/local/bin/apktool
           sudo curl -L https://bitbucket.org/iBotPeaches/apktool/downloads/apktool_2.10.0.jar -o /usr/local/bin/apktool.jar
@@ -66,11 +66,12 @@ jobs:
           # Rebuild APK
           apktool b netfy_source -o unsigned.apk
 
-      - name: Sign & Align APK
+      - name: Sign & Align APK (v2 & v3 Scheme)
         run: |
+          zipalign -v -p 4 unsigned.apk aligned.apk
           keytool -genkeypair -v -keystore netfy.keystore -alias netfy -keyalg RSA -keysize 2048 -validity 10000 -storepass netfyvpn123 -keypass netfyvpn123 -dname "CN=netfyVPN, OU=Netfy, O=Netfy, L=Tehran, ST=Tehran, C=IR"
-          jarsigner -verbose -sigalg SHA256withRSA -digestalg SHA-256 -keystore netfy.keystore -storepass netfyvpn123 -keypass netfyvpn123 unsigned.apk netfy
-          zipalign -v 4 unsigned.apk netfyVPN.apk
+          apksigner sign --ks netfy.keystore --ks-pass pass:netfyvpn123 --key-pass pass:netfyvpn123 --out netfyVPN.apk aligned.apk
+          apksigner verify --verbose netfyVPN.apk
           ls -lh netfyVPN.apk
 
       - name: Upload netfyVPN APK Artifact
@@ -83,7 +84,7 @@ jobs:
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: v1.0.0
-          name: "netfyVPN Android Client v1.0.0"
-          body: "Official Release of netfyVPN Android Client"
+          tag_name: v1.0.1
+          name: "netfyVPN Android Client v1.0.1"
+          body: "Official Release of netfyVPN Android Client with Signature Scheme v2 & v3"
           files: netfyVPN.apk
