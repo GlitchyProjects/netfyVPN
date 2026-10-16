@@ -127,7 +127,7 @@ dependencies:
   # Web platform not supported
   # platform-specific settings
   network_info_plus: ^6.1.4
-  humanizer: ^3.0.1
+  humanizer: 3.0.0
   dependency_validator: ^5.0.2
 
 dev_dependencies:
