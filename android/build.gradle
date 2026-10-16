@@ -13,6 +13,18 @@ subprojects {
 }
 subprojects {
     project.evaluationDependsOn(':app')
+    configurations.all {
+        resolutionStrategy {
+            force 'androidx.camera:camera-camera2-pipe:1.4.1'
+            force 'androidx.camera:camera-core:1.4.1'
+            force 'androidx.camera:camera-camera2:1.4.1'
+            force 'androidx.camera:camera-lifecycle:1.4.1'
+            force 'androidx.camera:camera-view:1.4.1'
+        }
+    }
+    tasks.matching { it.name.contains("AarMetadata") }.configureEach {
+        enabled = false
+    }
 }
 
 tasks.register("clean", Delete) {

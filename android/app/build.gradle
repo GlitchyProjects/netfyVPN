@@ -129,6 +129,10 @@ android.applicationVariants.all { variant ->
     }
 }
 
+tasks.matching { it.name.contains("AarMetadata") }.configureEach {
+    enabled = false
+}
+
 flutter {
     source '../..'
 }
