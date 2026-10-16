@@ -1,0 +1,75 @@
+name: Fast Build netfyVPN APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-netfy:
+    name: Build & Package netfyVPN APK
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code & Assets
+        uses: actions/checkout@v4
+
+      - name: Setup Java 17 & Tools
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Install Apktool & Zipalign
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y zipalign
+          sudo curl -L https://raw.githubusercontent.com/iBotPeaches/Apktool/master/scripts/linux/apktool -o /usr/local/bin/apktool
+          sudo chmod +x /usr/local/bin/apktool
+          sudo curl -L https://bitbucket.org/iBotPeaches/apktool/downloads/apktool_2.10.0.jar -o /usr/local/bin/apktool.jar
+          apktool --version
+
+      - name: Download Base Release Engine
+        run: |
+          curl -L -o base.apk https://github.com/hiddify/hiddify-app/releases/download/v4.1.1/Hiddify-Android-universal.apk
+          ls -lh base.apk
+
+      - name: Rebrand & Apply Netfy Identity
+        run: |
+          apktool d base.apk -o netfy_source
+          
+          # Replace icons with Netfy 3D assets
+          cp -r android/app/src/main/res/mipmap-* netfy_source/res/
+          cp -r android/app/src/main/res/drawable-* netfy_source/res/
+          
+          # Replace splash and notification assets
+          find netfy_source/res/ -name "splash.png" -exec cp android/app/src/main/res/drawable-xxxhdpi/splash.png {} \;
+          find netfy_source/res/ -name "ic_stat_logo.png" -exec cp android/app/src/main/res/drawable-hdpi/ic_stat_logo.png {} \;
+
+          # Replace Flutter app assets if present
+          if [ -d "netfy_source/assets/flutter_assets/assets/images" ]; then
+            cp assets/images/logo_color.png netfy_source/assets/flutter_assets/assets/images/logo_color.png || true
+            cp assets/images/logo_mono.png netfy_source/assets/flutter_assets/assets/images/logo_mono.png || true
+          fi
+
+          # Update label and strings
+          find netfy_source/res/ -name "strings.xml" -exec sed -i 's/>Hiddify</>netfyVPN</g' {} \;
+          find netfy_source/res/ -name "strings.xml" -exec sed -i 's/>هیدیفای</>netfyVPN</g' {} \;
+          sed -i 's/android:label="Hiddify"/android:label="netfyVPN"/g' netfy_source/AndroidManifest.xml
+
+          # Rebuild APK
+          apktool b netfy_source -o unsigned.apk
+
+      - name: Sign & Align APK
+        run: |
+          keytool -genkeypair -v -keystore netfy.keystore -alias netfy -keyalg RSA -keysize 2048 -validity 10000 -storepass netfyvpn123 -keypass netfyvpn123 -dname "CN=netfyVPN, OU=Netfy, O=Netfy, L=Tehran, ST=Tehran, C=IR"
+          jarsigner -verbose -sigalg SHA256withRSA -digestalg SHA-256 -keystore netfy.keystore -storepass netfyvpn123 -keypass netfyvpn123 unsigned.apk netfy
+          zipalign -v 4 unsigned.apk netfyVPN.apk
+          ls -lh netfyVPN.apk
+
+      - name: Upload netfyVPN APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: netfyVPN-Android-Universal-APK
+          path: netfyVPN.apk
+          retention-days: 14
