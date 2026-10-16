@@ -39,6 +39,7 @@ jobs:
           apktool d base.apk -o netfy_source
           
           # Replace icons with Netfy 3D assets
+          rm -f netfy_source/res/mipmap-*/*.webp
           cp -r android/app/src/main/res/mipmap-* netfy_source/res/
           cp -r android/app/src/main/res/drawable-* netfy_source/res/
           
