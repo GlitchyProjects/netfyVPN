@@ -135,7 +135,7 @@ class BatteryOptimizationWidget extends HookConsumerWidget {
                 await ref.read(batteryOptimizationNotifierProvider.notifier).requestToIgnore();
               },
             ),
-      error: (_, _) => const SizedBox(),
+      error: (_, __) => const SizedBox(),
       loading: () => const SizedBox(
         height: 48,
         child: Center(

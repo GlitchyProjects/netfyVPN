@@ -52,7 +52,7 @@ class RuleTile extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final t = ref.watch(translationsProvider).requireValue;
     final scrollController = useScrollController();
-    ref.listen(rulesNotifierProvider, (_, _) {
+    ref.listen(rulesNotifierProvider, (_, __) {
       if (scrollController.offset > 0) scrollController.jumpTo(0);
     });
     return Material(

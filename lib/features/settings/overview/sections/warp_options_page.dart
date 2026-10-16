@@ -36,7 +36,7 @@ class WarpOptionsPage extends HookConsumerWidget {
                 : warpOptions.when(
                     loading: () => null,
                     data: (_) => null,
-                    error: (_, _) =>
+                    error: (_, __) =>
                         Text(t.pages.settings.warp.missingConfig, style: TextStyle(color: theme.colorScheme.error)),
                   ),
             trailing: warpOptions.isLoading
