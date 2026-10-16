@@ -6,10 +6,15 @@ on:
     branches:
       - main
 
+permissions:
+  contents: write
+
 jobs:
   build-netfy:
     name: Build & Package netfyVPN APK
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout Code & Assets
         uses: actions/checkout@v4
